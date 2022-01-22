@@ -20,7 +20,7 @@ Computer_Help_Option_A = cv2.imread("Images/Computer_Help_Option_A.png")
 Computer_Help_Option_B = cv2.imread("Images/Computer_Help_Option_B.png")
 Computer_Help_Option_D = cv2.imread("Images/Computer_Help_Option_D.png")
 
-computer_poll = 0
+Expert_option = 0
 
 def captureQuestion():
     questionCoordinates = {"top": 494, "left": 266, "width": 430, "height": 60}
@@ -94,11 +94,11 @@ def saveAnswer(question,answer):
 def GetAnswer(question):
     return questionBank[question]
 
-def clickAnswer(answer):
+def clickAnswer(answer,questionNumber):
     pag.click(options[answer][0],options[answer][1])
     pag.click(1444,920)
     time.sleep(3)
-    if questionNumber < 14:
+    if questionNumber < 13:
         pag.click(478,619)
         pag.click(1444,920)
     time.sleep(5)
@@ -127,18 +127,19 @@ while True:
     while questionNumber <= 13:
         question = captureQuestion()
         print("\n Question Number --- " + str(questionNumber))
+        questionNumber = questionNumber + 1
         print("\n Question --- " + question)
         if question not in questionBank:
-            if computer_poll == 0:
-                computer_poll = 1
+            if Expert_option == 0:
+                Expert_option = 1
                 Answer = GetComputerHelp()
                 print("\n Answer --- " + str(Answer))
                 saveAnswer(question,Answer)
                 print("\n Added Question --- " + str(len(questionBank)))
-                clickAnswer(Answer)
+                clickAnswer(Answer,questionNumber - 1)
             else:
-                questionNumber = 0
-                computer_poll = 0
+                questionNumber = 1
+                Expert_option = 0
                 Answer = GetAudiencePollHelp()
                 print("\n Answer --- " + str(Answer))
                 saveAnswer(question,Answer)
@@ -153,9 +154,8 @@ while True:
                 time.sleep(3)
                 restartGame()
         else:
-            questionNumber = questionNumber + 1
             Answer = GetAnswer(question)
             print("\n Answer --- " + str(Answer))
-            clickAnswer(Answer)
+            clickAnswer(Answer,questionNumber - 1)
     
     restartGame()
